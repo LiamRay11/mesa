@@ -67,7 +67,8 @@ bool agx_nir_lower_layer(struct nir_shader *s);
 bool agx_nir_lower_clip_distance(struct nir_shader *s);
 bool agx_nir_lower_subgroups(struct nir_shader *s);
 bool agx_nir_lower_subgroups_g17p(struct nir_shader *s);
-bool agx_nir_lower_subgroups_m5(struct nir_shader *s, bool native_shuffle_xor);
+bool agx_nir_lower_subgroups_m5(struct nir_shader *s, bool native_shuffle_xor,
+                                bool native_float_minmax);
 bool agx_nir_lower_dynamic_shuffle_xor(struct nir_shader *s);
 bool agx_nir_lower_quad_derivative_ids(struct nir_shader *s);
 bool agx_nir_lower_compute_derivatives(struct nir_shader *s);
