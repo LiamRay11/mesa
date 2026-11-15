@@ -139,8 +139,10 @@ struct var_info {
    bool found_read;
    bool duplicate;
 
-   /* Block that has all the variable stores.  All the blocks with reads
-    * should be dominated by this block.
+   /* Block of the first stores, which collect the constant data. Stores in
+    * other blocks may only write bytes the collected data already holds, with
+    * the same values. All the blocks with reads should be dominated by this
+    * block.
     */
    nir_block *block;
 
