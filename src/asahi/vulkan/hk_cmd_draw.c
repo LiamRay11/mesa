@@ -11703,7 +11703,15 @@ hk_flush_dynamic_state_slow(struct hk_cmd_buffer *cmd, struct hk_cs *cs,
                   ? DIV_ROUND_UP(hw_vs->info.mesh.primitive_stride_B *
                                  hw_vs->info.mesh.max_primitives, 4) : 0,
                dev->dev.chip == AGX_CHIP_G17P
-                  ? DIV_ROUND_UP(hw_vs->b.info.local_size, 16) : 9},
+                  /* The low half sizes threadgroup memory in 16-byte units;
+                   * the high half reserves vertex output in 64-byte units,
+                   * including the two-unit header. Leaving the output arena
+                   * empty corrupts exports when mesh workgroups overlap. */
+                  ? DIV_ROUND_UP(hw_vs->b.info.local_size, 16) |
+                    ((2 + DIV_ROUND_UP(
+                       ALIGN_POT(hw_vs->info.mesh.max_vertices, 4) *
+                          hw_vs->info.uvs.size, 16)) << 16)
+                  : 9},
          };
          if (dev->dev.chip == AGX_CHIP_G17S) {
             if (!agx_vdm_m5_mesh_set_output_limits(
